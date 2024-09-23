@@ -1,0 +1,37 @@
+Using Jenkins Master with Docker as Agents Instead of Using Ec2 Machines as Slave Nodes in Master-Slave Architecture to maintain efficiency and cost-optimization.
+
+* Installation of Jenkins and Configuration.
+* Install Docker.
+* basically when we install docker, docker daemon is installed we installed using root user it will be only accessible to root. So I have granted permissions by using the following that Jenkins user is created by installing Jenkins. We will add Jenkins user to docker group and also ubuntu user. 
+- sudo su - 
+- usermod -aG docker Jenkins	This command adds the jenkins user to the docker group. This means that the jenkins user will have permissions to run Docker commands without needing sudo.
+- usermod -aG docker ubuntu	This command adds the ubuntu user to the docker group. Similarly, this grants the ubuntu user permissions to interact with Docker without needing sudo.
+- systemctl restart docker
+
+
+* From the root user create a password for Jenkins users and add jenkinst to sudoers.
+- sudo passwd Jenkins
+- sudo visudo
+add this line        jenkins ALL=(ALL) NOPASSWD:ALL
+
+jenkins: The username being granted sudo privileges.
+ALL: The user can run commands on any host.
+(ALL): The user can run commands as any user.
+NOPASSWD:ALL: The user can execute commands without entering a password. (Remove NOPASSWD: if you want to require a password.)
+
+* Also Restart the Jenkins, to pickup all the changes.
+* Install Docker plugin inside the Jenkins. To run docker pipeline using docker as agent on Jenkins we need to make sure of correct configuration by adding a docker plugun in Jenkins and installing docker on the machine where Jenkins is running.
+
+					PIPELINES
+
+My-First-Pipeline:
+
+A simple Jenkins pipeline to verify if the docker agent configuration is working as expected.
+
+* dashboard >> Manage Jenkins >> Plugins >> Available plugins >> Docker Pipeline.
+* Create an item >> pipeline ( project )
+* From the project >> first-pipeline >> Configuration >> Pipeline from scm - ener GitHub url, branch name, parent directory, and append my-first-pipeline/jenkinsfile  and save.
+* Now build the project here we can see that our pipeline script from GitHub is success, it will create an image of node-16 alphine using docker and checks the docker version.
+* After that the docker container is stopped and removed.
+* The process here can be that if we use Jenkins master slave architecture we need to have specific no of slaves of ec2 instances to run particular pipelines. But here we used docker as agent, we made a pipeline run to perform this docker has provided an agent to run this container and after the job is done container is automatically deleted. By this the efficiency and const-optimization is maintained. Only when there is a request the container is created.
+* Major challenges would be managing the dependencies, upgrading VM's, technically there should be a separate team to maintain nodes in VM approach,

@@ -1,0 +1,73 @@
+************************************** 	 JENKINS *************************************************
+
+Starting with Jenkins as a DevOps intern is a great way to dive into continuous integration and continuous delivery (CI/CD). Here’s a breakdown of the fundamentals you need to know:
+
+### 1. **What is Jenkins?**
+   - Jenkins is an open-source automation server that helps automate the parts of software development related to building, testing, and deploying, facilitating continuous integration and continuous delivery.
+
+### 2. **Key Concepts:**
+   - **Jobs/Pipelines:** The core of Jenkins is creating jobs or pipelines, which are a series of steps that Jenkins automates. A pipeline might include code building, testing, and deploying.
+   - **Build Triggers:** Jenkins jobs can be triggered automatically by various means, like committing code to a repository, a specific time interval, or manually.
+   - **Nodes/Agents:** Jenkins uses a master-agent architecture. The master is the main server that orchestrates the jobs, while agents (or nodes) are the machines that run the jobs.
+   - **Plugins:** Jenkins has a rich ecosystem of plugins that extend its capabilities, such as integrating with version control systems like Git, or with cloud providers like AWS.
+
+### 3. **Installing Jenkins:**
+   - You can install Jenkins on various platforms, including Windows, macOS, and Linux. On Ubuntu, for example:
+     ```bash
+     sudo apt update
+     sudo apt install openjdk-11-jdk
+     wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+     sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+     sudo apt update
+     sudo apt install jenkins
+     sudo systemctl start jenkins
+     sudo systemctl status jenkins
+     ```
+   - Access Jenkins via `http://localhost:8080` after installation.
+
+### 4. **Basic Jenkins Pipeline:**
+   - Pipelines in Jenkins can be created using a **Pipeline script** (Groovy-based DSL) or through a simple GUI.
+   - Example of a simple pipeline:
+     ```groovy
+     pipeline {
+       agent any
+       stages {
+         stage('Build') {
+           steps {
+             echo 'Building...'
+           }
+         }
+         stage('Test') {
+           steps {
+             echo 'Testing...'
+           }
+         }
+         stage('Deploy') {
+           steps {
+             echo 'Deploying...'
+           }
+         }
+       }
+     }
+     ```
+
+### 5. **Setting Up a Simple Job:**
+   - **Freestyle Project:** Start with creating a Freestyle project to understand how jobs work. You can configure SCM (Source Control Management), build triggers, build steps, and post-build actions.
+   - **Source Control Integration:** Connect Jenkins to your GitHub/Bitbucket repository to automatically pull and build the code.
+   - **Build Tools Integration:** Integrate Jenkins with build tools like Maven, Gradle, or npm to compile your code.
+
+### 6. **Best Practices:**
+   - **Version Control:** Store Jenkins pipeline scripts and configurations in version control for reproducibility.
+   - **Modular Pipelines:** Break down your pipelines into modular stages to simplify maintenance.
+   - **Environment Variables:** Use environment variables to manage configurations across different environments (dev, test, prod).
+   - **Notifications:** Set up notifications (e.g., email, Slack) to alert teams when builds fail.
+
+### 7. **Security:**
+   - Secure Jenkins by setting up proper user roles, access controls, and ensuring that plugins are up to date to avoid vulnerabilities.
+
+### 8. **Learning Resources:**
+   - **Official Documentation:** Jenkins has comprehensive [documentation](https://www.jenkins.io/doc/).
+   - **Tutorials:** Start with Jenkins’ [getting started](https://www.jenkins.io/doc/pipeline/tour/getting-started/) guide.
+   - **Hands-On Practice:** Create simple pipelines that automate tasks like building and testing code to get familiar with the tool.
+
+By mastering these fundamentals, you’ll be well on your way to leveraging Jenkins effectively in your DevOps workflows.

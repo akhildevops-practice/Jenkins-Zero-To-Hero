@@ -1,0 +1,105 @@
+********************************************************************CI/CD********************************************************************************************
+CI/CD - We are trying to create an app and deliver it to the customer which involes the following steps in CI/CD that can be automated instead of manual.
+
+- unit tests:
+	For example if we written a code to create calculator, we check the addition function, giving 2, 3 as input and checking the output, the process to check that particular block of code 	is known as unit test. 
+- static code analysis:
+	- Using the same calculator example, if we declared 20 variable and only using 2 variables then we are wasting the allocating memory. Static code analysis checks the code is using 	necessary variable's, not to declare unwanted variables, check the indentation well formatted and all.
+		
+- Code vulnerability/quality:
+	Code quality is the process of making sure of not to have any security bug if we update our anroid and there is a bug hacker can enter to, to prevent this code quality is done.
+- automation Test:
+	In unit test we check that add function works properly, here we test that by performing add we don't affect the remaining function such as sub, mult, div this is known as 	function/end-end/automated test.
+- reports:
+	The progress of each step and test
+- deployment:
+	Making available to customer
+
+* Every feature is divided into chunks with jira, uploaded to git, pushed to GitHub.
+* We attach a ci/cd pipeline to remote repo whenever a code is commited a pipeline is triggered from Jenkins which includes all the above mentioned steps. DevOps Engineer make sure of creating tools based on requirement integrates tools such as maven, sonar, junit, docker, k8s to the pipeline. By triggering pipelines all these tests are automated.
+
+* In organizations we have dev, stage and production environments.
+* In production we require more servers, more ram. In staging it will be less. In dev it will be staging -1 
+* Jenkins test the process in dev, stage and prod.
+In dev we have 1 master 1node, in stage we have 3 masters, 5 nodes, in prod we have 3 masters 30 nodes. We cannot use the prod env to different stage because it is so expensive.
+* For example if we take amazon as it can have 1000's of microservices, having 10 teams and 10 nodes each node for each team. By doing this process of adding ec2 instances for different teams compute will increase. 
+* In weekends we change zero code changes but no of master and slave nodes are used will be wasted, autoscaling will not be a best option in real time prod, and Jenkins is not the recommended.
+
+
+MASTER-SLAVE ARCHITECTURE 
+
+
+
+In Jenkins, the master-slave architecture is a way to manage and distribute the workload of building and testing software across multiple machines. Here's a detailed breakdown of how, when, and where this architecture is used:
+
+### **Master-Slave Architecture Overview**
+
+1. **Master:**
+   - **Role:** The Jenkins master is the central server that manages the overall Jenkins environment. It is responsible for:
+     - Scheduling and dispatching jobs.
+     - Managing the configuration of jobs and the system.
+     - Providing the user interface and web access for Jenkins.
+     - Handling the build requests and managing the build queue.
+   - **Requirements:** The master server needs to be robust and reliable since it manages the overall Jenkins operations. It doesn’t necessarily need to be highly performant for actual builds if it’s primarily handling job scheduling and administrative tasks.
+
+2. **Slave (Agent):**
+   - **Role:** Jenkins slaves (also called agents) are separate machines that perform the actual build and test tasks. Each slave:
+     - Executes jobs as assigned by the master.
+     - Can be set up with specific configurations, tools, or environments necessary for the builds.
+     - Reports back to the master with build results.
+   - **Requirements:** Slaves can be optimized for specific types of builds or environments. They may be virtual machines, physical machines, or cloud-based instances.
+
+### **How It Works**
+
+1. **Job Scheduling:**
+   - When a job is scheduled, the Jenkins master decides which slave will execute the job based on the job’s requirements and the available slaves.
+
+2. **Job Execution:**
+   - The master dispatches the job to a chosen slave. The slave then executes the job using its local environment and tools.
+
+3. **Result Reporting:**
+   - After the job completes, the slave sends the results back to the master, which then updates the Jenkins dashboard and reports on job status.
+
+4. **Communication:**
+   - The master communicates with slaves over a network connection. It uses a variety of protocols and configurations to manage this communication, such as SSH for Unix-based systems or JNLP (Java Network Launch Protocol) for connecting agents.
+
+### **When to Use Master-Slave Architecture**
+
+1. **Scaling:**
+   - When the number of builds or tests increases beyond what a single machine can handle, adding slaves allows the workload to be distributed and parallelized.
+
+2. **Specialized Environments:**
+   - Different jobs may require different environments (e.g., specific operating systems, versions of software, or hardware configurations). Slaves can be configured with the necessary environments to handle these specialized requirements.
+
+3. **Resource Optimization:**
+   - The master can be kept relatively lightweight and focused on scheduling and monitoring, while slaves handle the resource-intensive build processes.
+
+4. **Isolation:**
+   - By using slaves, you can isolate builds and tests, reducing the risk that a problem in one job will affect others.
+
+### **Where to Use Master-Slave Architecture**
+
+1. **Large Teams:**
+   - In organizations with large development teams, where multiple concurrent builds and tests are needed, having a master-slave setup helps manage and streamline the process.
+
+2. **Continuous Integration/Continuous Deployment (CI/CD) Pipelines:**
+   - For CI/CD pipelines that require frequent and complex builds, the master-slave architecture helps ensure that builds are processed efficiently and that feedback is provided in a timely manner.
+
+3. **Diverse Build Requirements:**
+   - When your projects have varying requirements for different types of builds (e.g., cross-platform builds), setting up slaves with the appropriate configurations can simplify managing these requirements.
+
+In summary, the master-slave architecture in Jenkins is a powerful way to handle complex and resource-intensive build and deployment processes. It allows for scalability, specialized environments, and efficient resource management, making it suitable for a wide range of development scenarios.
+
+
+
+
+
+*************https://youtu.be/ogrx8G8pClQ?si=TCQYSKYCvMviitrO ( this is the project u need to do after docker and k8's )
+
+
+
+
+
+
+
+
