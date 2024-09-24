@@ -1,0 +1,150 @@
+JENKINS END TO END CICD Implementation with Detailed Notes | BEST CICD PROJECT
+
+
+/var/lib/jenkins/secrets/initialAdminPassword
+
+
+INTERVIEW QUESTIONS:
+1. Can JenkinsFile can be in any location?
+a. Yes, It can be in any location.
+
+2. JenkinsFile can have any different names?
+a. Obviously can have a different name.
+Yes Jenkins file can be in any location and can have any name.
+
+3. How to create a Jenkins file and what is its purpose?
+a. In Jenkins we can write jenkinsfile from jobs of pipeline or we can import it using GitHub. 
+The purpose of it is to execute the steps of Continuous Integration.
+
+4. Difference between add user and user add?
+a. 
+
+*** Maven***
+5. Difference between mvn clean package and mvn clean install?
+a. If you want to push your enterprise archive, java archive, eb archive to the artifactory / nexus in such cases we can use mvn clean install.
+In my case i dont need to push to any artifactory i need to push the image to docker registry so i used mvn clean package.
+
+Basically we have pom.xml in our projects directory, it is responsible for getting the dependencies runtime and building the application.
+Here using maven our application will complete the process of build, by this artifacts will be generated into jar/war files.
+We can see the target folder where the archive of web s present. In DockerFile we may use jar file by copying it.
+
+
+
+
+***Static Code Analysis***
+Here we need to configure the URL of our SonarQube configured with public ip and port. And also mention credentials and token. Here we use another maven target.
+
+***Docker***
+Here we build and push the image by using the docker registry credentials.
+
+***Update Deployment File***
+Here we can use argocd updater/shell script, we are using a shell script file.
+
+- We are using Docker as agent for containers, Jenkins uses master-slave architecture instead of docker we can have used ec2 instances as worker nodes. But these instances should run for a long time. We may get more cost.
+- And also the configuration will need to be done on all the instances.
+- The efficient way is to use docker as agent where we include all of our stages in pipeline that will containerize and run. 
+- Once all the stages are passed the container will be deleted by the pipeline.
+- SO that the resources can be used by another stages.
+
+* Install Docker Pipeline Plugin.
+- Docker Pipeline
+* Install SonarQube plugin and also install SonarQube severit on ec2 instance
+- SonarQube Scanner
+Configure a Sonar Server:
+apt install unzip
+adduser SonarQube
+sudo su - sonarqube
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
+unzip *
+chmod -R 755 /home/sonarqube/sonarqube-9.4.0.54424
+chown -R sonarqube:sonarqube /home/sonarqube/sonarqube-9.4.0.54424
+cd sonarqube-9.4.0.54424/bin/linux-x86-64/
+./sonar.sh start
+
+
+We can launch SonarQube using 3.110.30.49:9000. In login admin as username and password. And change the password to 12345
+Maven need not to install on instance because it is already integrated with docker container.
+
+To make connection between Jenkins and SonarQube, SonarQube >> My account >> security >> generate token - Jenkins
+
+Now go to manage Jenkins >> Credentials >> System >> Global >> Secret text >> paste and save it.
+sudo su -
+exit
+
+Install Docker On ec2 instance.
+sudo apt update
+sudo apt install docker.io
+
+Grant Jenkins user and Ubuntu user permission to docker deamon.
+sudo su - 
+usermod -aG docker jenkins
+usermod -aG docker ubuntu
+systemctl restart docker
+
+Once you are done with the above steps, it is better to restart Jenkins.
+http://<ec2-instance-public-ip>:8080/restart
+The docker agent configuration is now successful.
+
+minikube start --memory=2200mb --driver=docker
+
+
+
+curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.28.0/install.sh | bash -s v0.28.0
+ kubectl create -f https://operatorhub.io/install/argocd-operator.yaml
+ kubectl get csv -n operators
+ vim argocd-basic.yml
+
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: example-argocd
+  labels:
+    example: basic
+spec: {}
+  309  kubectl apply -f argocd-basic.yml
+  310  kubectl get pods
+  311  kubectl get svc
+  312  kubectl edit svc example-argocd-server
+  313  kubectl get svc
+  314  minikube service argocd-server
+  315  minikube service example-argocd-server
+  316  minikube service list
+  317  kubectl get pods
+  318  kubectl port-forward svc/example-argocd-server 8080:80
+  319  kubectl port-forward svc/example-argocd-server 8443:443
+  320  kubectl get secret
+  321  kubectl edit secret example-argocd-cluster
+  322  kubectl edit secret example-argocd-cluster
+  323  echo *************************************= | base64 -d
+  324  kubectl port-forward svc/example-argocd-server 8443:443
+  325  echo ***************************************= | base64 -d
+  326  kubectl port-forward svc/example-argocd-server 8443:443
+  327  kubectl get deploy
+  328  kubectl get pods
+
+
+
+
+- Errors:
+1. Got an Issue of at the stage of SonarQube url?
+a. I have changed the url based on my ip address, committed and pushed. And i also added the SonarQube security issue by adding the credentials of SonarQube at credentials by adding token and all.
+
+2. Got an issue of docker image at build and push docker image?
+a. Solved it by changing the docker registry of my account to it. Because we are using our docker credentials.
+
+3. Got an issue at last deployment stage?
+a. Solved it by configuring my GitHub username and email in ec2 instance.
+Forked the repository and updated my credentials in Jenkins File and deleted the present token and created fine grained token with all the permissions.
+
+4. After configuring argocd we need to host it in browser but it is not worked?
+a. First made a port forwarding to http and https, to local host.
+ Add an Exception for the Self-Signed Certificate
+If you must use HTTPS, you can add an exception for the self-signed certificate. In Chrome:
+
+Go to chrome://flags/#allow-insecure-localhost.
+Set Allow invalid certificates for resources loaded from localhost to Enabled.
+
+
+
+https://operatorhub.io/operator/argocd-operator
+https://argocd-operator.readthedocs.io/en/latest/usage/basics/
